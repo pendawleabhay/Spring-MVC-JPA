@@ -6,6 +6,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,6 +19,8 @@ import edu.sjsu.cmpe275.lab2.entities.User;
 
 @Controller
 public class FrontController {
+	
+	ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("beans.xml");
 
 	@RequestMapping(value="/", method=RequestMethod.GET )
 	public ModelAndView homePage() {
@@ -28,9 +31,10 @@ public class FrontController {
 	@RequestMapping(value = "submitUserForm", method = RequestMethod.POST)
 	public ModelAndView submitUserForm(@ModelAttribute("user") User user){
 		
-		UserDao dao = new UserDao();
+		UserDao dao = context.getBean(UserDao.class);
+		//UserDao dao = new UserDao();
 		dao.createUser(user);
-		
+		System.out.println(user.getFirstname());
 		ModelAndView model = new ModelAndView("UserSuccess");
 		return model;
 	}
